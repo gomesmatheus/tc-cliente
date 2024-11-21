@@ -19,7 +19,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: '1.21'
+        go-version: '1.21'  # Specify the Go version you are using
 
     - name: Cache Go modules
       uses: actions/cache@v3
@@ -37,20 +37,15 @@ jobs:
         go test -v ./... > result.log; tail -n 10 result.log
         go test -coverprofile=coverage.out ./... # This generates coverage.out
 
-    - name: Upload coverage to SonarCloud
+    - name: SonarCloud Setup
       uses: sonarsource/sonarcloud-github-action@v2
-      with:
-        sonarcloud_token: ${{ secrets.SONAR_TOKEN }}
-        projectKey: 'gomesmatheus/tc-cliente'
-        projectName: 'gomesmatheus_tc-cliente'
 
     - name: Analyze with SonarCloud
       run: |
-        curl -sSLo sonar-scanner-cli.zip https://github.com/SonarSource/sonar-scanner-cli/releases/download/4.8.0.2856/sonar-scanner-cli-4.8.0.2856-linux.zip
-        unzip sonar-scanner-cli.zip -d sonar-scanner
-        sonar-scanner/sonar-scanner-4.8.0.2856-linux/bin/sonar-scanner \
+        sonar-scanner \
           -Dsonar.projectKey=gomesmatheus_tc-cliente \
+          -Dsonar.projectName="tc-cliente" \
           -Dsonar.sources=./ \
           -Dsonar.host.url=https://sonarcloud.io \
           -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
-          -Dsonar.go.coverageReportPaths=coverage.out # Points to your coverage file
+          -Dsonar.go.coverageReportPaths=coverage.out
