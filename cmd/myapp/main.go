@@ -12,6 +12,7 @@ import (
 
 func main() {
 	clienteRepository, err := database.NewClienteRepository()
+
 	if err != nil {
 		log.Fatalf("Error initializing database: %v", err)
 	}

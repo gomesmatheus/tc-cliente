@@ -19,6 +19,7 @@ type DbConnections struct {
 
 func (conns DbConnections) RegistrarCliente(cliente entity.Cliente) (entity.Cliente, error) {
 	_, err := conns.Db.Exec(context.Background(), "INSERT INTO clientes (cpf, nome, email) VALUES ($1, $2, $3)", cliente.Cpf, cliente.Nome, cliente.Email)
+
 	if err != nil {
 		fmt.Println("Erro ao inserir cliente na base de dados", err)
 	}

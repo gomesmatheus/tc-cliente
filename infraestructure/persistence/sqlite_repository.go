@@ -22,6 +22,7 @@ func (conns DbConnectionsMock) RegistrarCliente(cliente entity.Cliente) (entity.
 	}
 
 	fmt.Println("Cliente inserido com sucesso:", cliente)
+
 	return cliente, nil
 }
 
