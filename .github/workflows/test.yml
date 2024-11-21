@@ -35,7 +35,7 @@ jobs:
     - name: Run tests and generate coverage report
       run: |
         go test -coverprofile=coverage.out ./...
-        
+
     - name: Check coverage report
       run: cat coverage.out
 
@@ -48,7 +48,7 @@ jobs:
         args: >
           -Dsonar.projectKey=gomesmatheus_tc-cliente
           -Dsonar.organization=gomesmatheus
-          -Dsonar.sources=.
+          -Dsonar.sources=/cmd,/delivery,/domain,/infraestructure,/usecase
           -Dsonar.tests=.
           -Dsonar.exclusions=**/*
           -Dsonar.test.inclusions=**/*_test.go
