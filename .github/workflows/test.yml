@@ -1,4 +1,4 @@
-name: Test and Coverage Validation
+name: Test and Coverage Validation with SonarQube
 
 on:
   pull_request:
@@ -8,6 +8,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout Code
       uses: actions/checkout@v2
@@ -27,11 +28,25 @@ jobs:
         go test -coverprofile=coverage.out ./...
         go tool cover -func=coverage.out
 
-    - name: Upload Coverage to Codecov
-      uses: codecov/codecov-action@v3
+    - name: Set up SonarQube
+      uses: sonarsource/sonarcloud-github-action@v1
       with:
-        file: coverage.out
-        fail_ci_if_error: true
+        token: ${{ secrets.SONAR_TOKEN }}
+
+    - name: Prepare SonarQube analysis
+      run: |
+        mkdir -p .sonar
+        echo "sonar.projectKey=gomesmatheus_tc-cliente" > .sonar/sonar-project.properties
+        echo "sonar.projectName=gomesmatheus_tc-cliente" >> .sonar/sonar-project.properties
+        echo "sonar.projectVersion=1.0" >> .sonar/sonar-project.properties
+        echo "sonar.sources=." >> .sonar/sonar-project.properties
+        echo "sonar.tests=." >> .sonar/sonar-project.properties
+        echo "sonar.go.coverageReportPaths=coverage.out" >> .sonar/sonar-project.properties
+        echo "sonar.language=go" >> .sonar/sonar-project.properties
+
+    - name: Run SonarQube Analysis
+      run: |
+        sonar-scanner
 
     - name: Check Coverage
       run: |
