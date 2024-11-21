@@ -46,8 +46,3 @@ jobs:
       uses: sonarsource/sonarcloud-github-action@v2
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      with:
-        args: >
-          -Dsonar.projectKey=gomesmatheus_tc-cliente
-          -Dsonar.organization=gomesmatheus
-          -Dsonar.go.coverage.reportPaths=coverage.out
