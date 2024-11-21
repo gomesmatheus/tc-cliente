@@ -1,4 +1,4 @@
-name: Go Build and Analyze with SonarCloud 
+name: Go Build and Analyze with SonarCloud
 
 on:
   push:
@@ -37,6 +37,7 @@ jobs:
         go test -coverprofile=coverage.out ./...
 
     - name: SonarCloud Analysis
+      id: sonarcloud
       uses: sonarsource/sonarcloud-github-action@v2
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -49,3 +50,10 @@ jobs:
           -Dsonar.exclusions=**/*
           -Dsonar.test.inclusions=**/*_test.go
           -Dsonar.go.coverage.reportPaths=coverage.out
+
+    - name: Check Quality Gate
+      run: |
+        curl -u ${{ secrets.SONAR_TOKEN }}: \
+          "https://sonarcloud.io/api/qualitygates/project_status?projectKey=gomesmatheus_tc-cliente" \
+          | jq -e '.projectStatus.status == "OK"' > /dev/null
+      shell: bash
