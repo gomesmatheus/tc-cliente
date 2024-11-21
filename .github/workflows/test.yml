@@ -28,11 +28,6 @@ jobs:
         go test -coverprofile=coverage.out ./...
         go tool cover -func=coverage.out
 
-    - name: Set up SonarQube
-      uses: sonarsource/sonarcloud-github-action@v1
-      with:
-        sonar-token: ${{ secrets.SONAR_TOKEN }}
-
     - name: Prepare SonarQube analysis
       run: |
         mkdir -p .sonar
@@ -43,6 +38,12 @@ jobs:
         echo "sonar.tests=." >> .sonar/sonar-project.properties
         echo "sonar.go.coverageReportPaths=coverage.out" >> .sonar/sonar-project.properties
         echo "sonar.language=go" >> .sonar/sonar-project.properties
+
+    - name: Set up SonarCloud (with token)
+      uses: sonarsource/sonarcloud-github-action@v1
+      with:
+        entryPoint: "sonar-scanner"
+        args: "-Dsonar.login=${{ secrets.SONAR_TOKEN }}"
 
     - name: Run SonarQube Analysis
       run: |
