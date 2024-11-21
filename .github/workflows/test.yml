@@ -41,14 +41,14 @@ jobs:
       uses: sonarsource/sonarcloud-github-action@v2
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-    # - name: Run SonarCloud analysis
-    #   run: |
-    #     echo ${{ secrets.SONAR_TOKEN }}  # Verify if the token is being passed
-    #     sonar-scanner \
-    #       -Dsonar.projectKey=gomesmatheus_tc-cliente \
-    #       -Dsonar.projectName="tc-cliente" \
-    #       -Dsonar.sources=./ \
-    #       -Dsonar.host.url=https://sonarcloud.io \
-    #       -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
-    #       -Dsonar.go.coverageReportPaths=coverage.out
+    - name: Run SonarCloud analysis
+      run: |
+        echo ${{ secrets.SONAR_TOKEN }}  # Verify if the token is being passed
+        sonar-scanner \
+          -Dsonar.projectKey=gomesmatheus_tc-cliente \
+          -Dsonar.projectName="tc-cliente" \
+          -Dsonar.sources=./ \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
+          -Dsonar.go.coverageReportPaths=coverage.out
 
