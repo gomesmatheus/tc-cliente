@@ -19,7 +19,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: '1.21'  # Specify the Go version you are using
+        go-version: '1.21'
 
     - name: Cache Go modules
       uses: actions/cache@v3
@@ -34,10 +34,16 @@ jobs:
 
     - name: Run tests and generate coverage report
       run: |
-        go test -v ./... > result.log; tail -n 10 result.log
-        go test -coverprofile=coverage.out ./... # This generates coverage.out
+        go test -coverprofile=coverage.out ./...
 
-    - name: SonarCloud Setup
+    - name: SonarCloud Analysis
       uses: sonarsource/sonarcloud-github-action@v2
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      with:
+        args: >
+          -Dsonar.projectKey=gomesmatheus_tc-cliente
+          -Dsonar.organization=gomesmatheus
+          -Dsonar.sources=.
+          -Dsonar.tests=.
+          -Dsonar.go.coverage.reportPaths=coverage.out
