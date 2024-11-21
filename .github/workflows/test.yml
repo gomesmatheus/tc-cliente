@@ -40,8 +40,9 @@ jobs:
     - name: SonarCloud Setup
       uses: sonarsource/sonarcloud-github-action@v2
 
-    - name: Analyze with SonarCloud
+    - name: Run SonarCloud analysis
       run: |
+        echo ${{ secrets.SONAR_TOKEN }}  # Verify if the token is being passed
         sonar-scanner \
           -Dsonar.projectKey=gomesmatheus_tc-cliente \
           -Dsonar.projectName="tc-cliente" \
@@ -49,3 +50,4 @@ jobs:
           -Dsonar.host.url=https://sonarcloud.io \
           -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
           -Dsonar.go.coverageReportPaths=coverage.out
+
