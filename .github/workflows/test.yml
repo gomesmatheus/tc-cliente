@@ -1,4 +1,4 @@
-name: Test and Coverage Validation with SonarQube
+name: Test and Coverage Validation with SonarCloud
 
 on:
   pull_request:
@@ -28,7 +28,7 @@ jobs:
         go test -coverprofile=coverage.out ./...
         go tool cover -func=coverage.out
 
-    - name: Prepare SonarQube analysis
+    - name: Prepare SonarCloud analysis
       run: |
         mkdir -p .sonar
         echo "sonar.projectKey=gomesmatheus_tc-cliente" > .sonar/sonar-project.properties
@@ -38,14 +38,15 @@ jobs:
         echo "sonar.tests=." >> .sonar/sonar-project.properties
         echo "sonar.go.coverageReportPaths=coverage.out" >> .sonar/sonar-project.properties
         echo "sonar.language=go" >> .sonar/sonar-project.properties
+        echo "sonar.host.url=https://sonarcloud.io" >> .sonar/sonar-project.properties  # Correct URL
 
     - name: Set up SonarCloud (with token)
       uses: sonarsource/sonarcloud-github-action@v1
       with:
-        entryPoint: "sonar-scanner"
-        args: "-Dsonar.login=${{ secrets.SONAR_TOKEN }}"
+        entryPoint: "sonar-scanner"  # Use sonar-scanner as the entry point
+        args: "-Dsonar.login=${{ secrets.SONAR_TOKEN }}"  # Pass the token here
 
-    - name: Run SonarQube Analysis
+    - name: Run SonarCloud Analysis
       run: |
         sonar-scanner
 
