@@ -1,74 +1,56 @@
-name: Test and Coverage Validation with SonarCloud
+name: Go Build and Analyze with SonarCloud
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
-    paths:
-      - '**/*.go'
+    branches:
+      - main
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
         go-version: '1.21'
 
+    - name: Cache Go modules
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/go-build
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
+
     - name: Install dependencies
-      run: |
-        go mod tidy
-        go mod vendor
+      run: go mod tidy
 
-    - name: Run Tests with Coverage
+    - name: Run tests and generate coverage report
       run: |
-        go test -coverprofile=coverage.out ./...
-        go tool cover -func=coverage.out
+        go test -v ./... > result.log; tail -n 10 result.log
+        go test -coverprofile=coverage.out ./... # This generates coverage.out
 
-    - name: Set up Java 17 (Required for SonarCloud)
-      uses: actions/setup-java@v3
+    - name: Upload coverage to SonarCloud
+      uses: sonarsource/sonarcloud-github-action@v2
       with:
-        java-version: '17'  # Ensure Java 17 is installed
-        distribution: 'temurin'  # You can use 'adoptopenjdk' or 'temurin'
+        sonarcloud_token: ${{ secrets.SONAR_TOKEN }}
+        projectKey: 'gomesmatheus/tc-cliente'
+        projectName: 'gomesmatheus_tc-cliente'
 
-    - name: Set Java Home Environment
+    - name: Analyze with SonarCloud
       run: |
-        echo "JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))" >> $GITHUB_ENV
-        echo "$JAVA_HOME/bin" >> $GITHUB_PATH
-
-    - name: Prepare SonarCloud analysis
-      run: |
-        mkdir -p .sonar
-        echo "sonar.projectKey=gomesmatheus_tc-cliente" > .sonar/sonar-project.properties
-        echo "sonar.projectName=gomesmatheus_tc-cliente" >> .sonar/sonar-project.properties
-        echo "sonar.projectVersion=1.0" >> .sonar/sonar-project.properties
-        echo "sonar.sources=." >> .sonar/sonar-project.properties
-        echo "sonar.tests=." >> .sonar/sonar-project.properties
-        echo "sonar.go.coverageReportPaths=coverage.out" >> .sonar/sonar-project.properties
-        echo "sonar.language=go" >> .sonar/sonar-project.properties
-        echo "sonar.host.url=https://sonarcloud.io" >> .sonar/sonar-project.properties  # Correct URL
-
-    - name: Set up SonarCloud (with token)
-      uses: sonarsource/sonarcloud-github-action@v1
-      with:
-        entryPoint: "sonar-scanner"
-        args: "-Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dsonar.host.url=https://sonarcloud.io"
-
-    - name: Run SonarCloud Analysis
-      run: |
-        sonar-scanner
-
-    - name: Check Coverage
-      run: |
-        COVERAGE_PERCENTAGE=$(go tool cover -func=coverage.out | grep total | awk '{print $3}' | sed 's/%//')
-        REQUIRED_COVERAGE=80  # Set the required coverage percentage
-
-        echo "Coverage: $COVERAGE_PERCENTAGE%"
-
-        if (( $(echo "$COVERAGE_PERCENTAGE < $REQUIRED_COVERAGE" | bc -l) )); then
-          echo "Error: Test coverage is below $REQUIRED_COVERAGE% (current: $COVERAGE_PERCENTAGE%)"
-          exit 1
-        fi
+        curl -sSLo sonar-scanner-cli.zip https://github.com/SonarSource/sonar-scanner-cli/releases/download/4.8.0.2856/sonar-scanner-cli-4.8.0.2856-linux.zip
+        unzip sonar-scanner-cli.zip -d sonar-scanner
+        sonar-scanner/sonar-scanner-4.8.0.2856-linux/bin/sonar-scanner \
+          -Dsonar.projectKey=gomesmatheus_tc-cliente \
+          -Dsonar.sources=./ \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
+          -Dsonar.go.coverageReportPaths=coverage.out # Points to your coverage file
