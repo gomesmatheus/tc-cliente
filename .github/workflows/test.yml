@@ -31,7 +31,7 @@ jobs:
     - name: Set up SonarQube
       uses: sonarsource/sonarcloud-github-action@v1
       with:
-        token: ${{ secrets.SONAR_TOKEN }}
+        sonar-token: ${{ secrets.SONAR_TOKEN }}
 
     - name: Prepare SonarQube analysis
       run: |
