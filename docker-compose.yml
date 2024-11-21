@@ -1,0 +1,37 @@
+version: "3.9"
+services:
+  cliente-app:
+    image: golang:alpine
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cliente-app
+    ports: 
+      - 3333:3333
+    volumes:
+      - ./:/usr/src/app
+    depends_on: 
+      - cliente-db
+      - cliente-redis
+    networks:
+      - cliente-bridge
+  cliente-db:
+    image: postgres:alpine3.19
+    container_name: cliente-db
+    environment:
+      - POSTGRES_PASSWORD=123
+    ports:
+      - 5432:5432
+    networks:
+      - cliente-bridge
+  cliente-redis:
+    image: redis:latest
+    container_name: cliente-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - cliente-bridge
+    restart: always
+networks:
+  cliente-bridge:
+    driver: bridge
