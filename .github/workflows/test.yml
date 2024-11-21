@@ -48,7 +48,7 @@ jobs:
         args: >
           -Dsonar.projectKey=gomesmatheus_tc-cliente
           -Dsonar.organization=gomesmatheus
-          -Dsonar.sources=/cmd,/delivery,/domain,/infraestructure,/usecase
+          -Dsonar.sources=cmd,delivery,domain,infraestructure,usecase
           -Dsonar.tests=.
           -Dsonar.exclusions=**/*
           -Dsonar.test.inclusions=**/*_test.go
