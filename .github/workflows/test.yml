@@ -39,6 +39,8 @@ jobs:
 
     - name: SonarCloud Setup
       uses: sonarsource/sonarcloud-github-action@v2
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
     - name: Run SonarCloud analysis
       run: |
