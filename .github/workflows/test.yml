@@ -28,6 +28,12 @@ jobs:
         go test -coverprofile=coverage.out ./...
         go tool cover -func=coverage.out
 
+    - name: Set up Java 17 (Required for SonarCloud)
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'  # Ensure Java 17 is installed
+        distribution: 'temurin'  # You can use 'adoptopenjdk' or 'temurin'
+
     - name: Prepare SonarCloud analysis
       run: |
         mkdir -p .sonar
