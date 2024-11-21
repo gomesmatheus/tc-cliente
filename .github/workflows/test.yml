@@ -46,5 +46,6 @@ jobs:
           -Dsonar.organization=gomesmatheus
           -Dsonar.sources=.
           -Dsonar.tests=.
-          -Dsonar.exclusions=go.mod
+          -Dsonar.exclusions=**/*
+          -Dsonar.test.inclusions=**/*_test.go
           -Dsonar.go.coverage.reportPaths=coverage.out
