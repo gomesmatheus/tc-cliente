@@ -26,7 +26,6 @@ func (usecase *clienteUseCases) Cadastrar(cliente entity.Cliente) (entity.Client
 }
 
 func (usecase *clienteUseCases) Recuperar(cpf int64) (entity.Cliente, error) {
-	// adicionar validação de cpf
 	return usecase.database.BuscarCliente(cpf)
 }
 

@@ -169,6 +169,7 @@ func TestBuscarClienteSuccess(t *testing.T) {
 	}
 
 	insertQuery := `INSERT INTO clientes (cpf, nome, email) VALUES (?, ?, ?)`
+
 	_, err := db.ExecContext(context.Background(), insertQuery, cliente.Cpf, cliente.Nome, cliente.Email)
 	if err != nil {
 		t.Fatalf("Failed to insert test data: %v", err)
