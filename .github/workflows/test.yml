@@ -38,9 +38,6 @@ jobs:
       run: |
         go test -coverprofile=coverage.out ./...
 
-    - name: Check coverage report
-      run: cat coverage.out
-
     - name: SonarCloud Analysis
       id: sonarcloud
       uses: sonarsource/sonarcloud-github-action@v2
