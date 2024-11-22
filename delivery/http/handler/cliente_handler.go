@@ -60,7 +60,11 @@ func (c *ClienteHandler) IdentificacaoRoute(w http.ResponseWriter, r *http.Reque
 			fmt.Println(err)
 			w.WriteHeader(400)
 			w.Write([]byte("Formato de CPF inválido"))
+		}
 
+		// This is a temorary if to check coverage
+		if cpf == 123 {
+			fmt.Println("Test if condition success!")
 		}
 
 		cliente, err := c.clienteUseCases.Recuperar(cpf)
