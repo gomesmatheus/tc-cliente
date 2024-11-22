@@ -63,9 +63,9 @@ func (c *ClienteHandler) IdentificacaoRoute(w http.ResponseWriter, r *http.Reque
 		}
 
 		// This is a temorary if to check coverage
-		if cpf == 123 {
-			fmt.Println("Test if condition success!")
-		}
+		// if cpf == 123 {
+		// 	fmt.Println("Test if condition success!")
+		// }
 
 		cliente, err := c.clienteUseCases.Recuperar(cpf)
 		if err != nil {
