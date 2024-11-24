@@ -15,3 +15,7 @@ spec:
       containers:
       - name: cliente-app-container
         image: DOCKER_IMAGE
+        resources:
+          limits:
+            memory: 100Mi
+            ephemeral-storage: "2Gi"
