@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cliente-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: cliente-app
+  template:
+    metadata:
+      labels:
+        app: cliente-app
+    spec:
+      containers:
+      - name: cliente-app-container
+        image: DOCKER_IMAGE
+        resources:
+          limits:
+            memory: 100Mi
+            ephemeral-storage: "2Gi"
