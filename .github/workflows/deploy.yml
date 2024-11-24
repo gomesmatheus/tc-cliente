@@ -52,5 +52,5 @@ jobs:
         IMAGE_TAG: ${{ steps.commit.outputs.short }}
       run: |
         sed -i.bak "s|DOCKER_IMAGE|$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|g" k8s/cliente-app-dep.yaml && \
-        kubectl apply -f k8s/cliente-app-dep.yaml
-        kubectl apply -f k8s/svc-cliente-app.yaml
+        kubectl apply -f k8s/cliente-app-dep.yaml --validate=false
+        kubectl apply -f k8s/svc-cliente-app.yaml --validate=false
