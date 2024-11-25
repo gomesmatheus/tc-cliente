@@ -17,7 +17,7 @@ jobs:
 
     steps:
 
-    - name: Set short git commit SHA 
+    - name: Set short git commit SHA
       id: commit
       uses: prompt/actions-commit-hash@v2
 
