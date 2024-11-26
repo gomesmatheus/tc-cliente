@@ -3,6 +3,9 @@ name: Deploy to ECR
 on:
   push:
     branches: [ main ]
+  pull_request:
+      branches:
+        - main
 
 env:
   ECR_REPOSITORY: fiap/container
