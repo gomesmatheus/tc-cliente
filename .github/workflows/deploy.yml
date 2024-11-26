@@ -6,7 +6,7 @@ on:
 
 env:
   ECR_REPOSITORY: fiap/container
-  EKS_CLUSTER_NAME: tc-eks
+  EKS_CLUSTER_NAME: tech-challenge-eks-kygY6dw5
   AWS_REGION: us-east-1
 
 jobs:
