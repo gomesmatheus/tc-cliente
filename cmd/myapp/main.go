@@ -23,9 +23,5 @@ func main() {
 	http.HandleFunc("/cliente/", clienteHandler.IdentificacaoRoute)
 
 	fmt.Println("Cliente ms running!")
-	log.Fatal(http.ListenAndServe(":3333", nil))
-}
-
-func Route(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Devolvi alguma parada"))
+	log.Fatal(http.ListenAndServe(":3334", nil))
 }

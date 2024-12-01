@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/jackc/pgx/v5"
 )
@@ -17,23 +18,37 @@ const (
     `
 )
 
+const maxRetries = 10
+const retryInterval = 2 * time.Second
+
 func NewPostgresDb(url string) (*pgx.Conn, error) {
-	config, err := pgx.ParseConfig(url)
-	if err != nil {
-		fmt.Println("Error parsing config", err)
-		return nil, err
+	var db *pgx.Conn
+	var err error
+
+	for i := 0; i < maxRetries; i++ {
+		fmt.Printf("Attempt %d start", i+1)
+		config, err := pgx.ParseConfig(url)
+		if err != nil {
+			fmt.Println("Error parsing config:", err)
+			return nil, err
+		}
+
+		db, err = pgx.ConnectConfig(context.Background(), config)
+		if err == nil {
+			break
+		}
+		fmt.Printf("Attempt %d end: Error connecting to database: %v\n", i+1, err)
+		time.Sleep(retryInterval)
 	}
 
-	db, err := pgx.ConnectConfig(context.Background(), config)
 	if err != nil {
-		fmt.Println("Error creating database connection", err)
-		return nil, err
+		return nil, fmt.Errorf("failed to connect to PostgreSQL after %d attempts: %w", maxRetries, err)
 	}
-	// setup create table
+
 	if _, err := db.Exec(context.Background(), createTables); err != nil {
-		fmt.Println("Error creating table Clientes", err)
+		fmt.Println("Error creating table clientes:", err)
 		return nil, err
 	}
 
-	return db, err
+	return db, nil
 }

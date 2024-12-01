@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cliente-db
+spec:
+  selector:
+    matchLabels:
+      app: cliente-db
+  template:
+    metadata:
+      labels:
+        app: cliente-db
+    spec:
+      containers:
+      - name: cliente-db
+        image: postgres:alpine3.19
+        env:
+        - name: POSTGRES_HOST
+          value: "cliente-db"
+        - name: POSTGRES_PASSWORD
+          value: "123"
+        - name: POSTGRES_USER
+          value: "postgres"
+        - name: POSTGRES_DB
+          value: "postgres"
+        ports:
+        - containerPort: 5432
