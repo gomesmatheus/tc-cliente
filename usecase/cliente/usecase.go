@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/gomesmatheus/tc-cliente/domain/entity"
 	"github.com/gomesmatheus/tc-cliente/infraestructure/persistence"
@@ -20,6 +21,16 @@ func NewClienteUseCases(clienteRepository persistence.ClienteRepository) *client
 func (usecase *clienteUseCases) Cadastrar(cliente entity.Cliente) (entity.Cliente, error) {
 	if !isClienteValido(cliente) {
 		return cliente, errors.New("Cliente inválido")
+	}
+
+	if cliente.Cpf == 991122 {
+		fmt.Println("Uncovered line")
+		fmt.Println("Uncovered line")
+		fmt.Println("Uncovered line")
+		fmt.Println("Uncovered line")
+		fmt.Println("Uncovered line")
+		fmt.Println("Uncovered line")
+		fmt.Println("Uncovered line")
 	}
 
 	return usecase.database.RegistrarCliente(cliente)
