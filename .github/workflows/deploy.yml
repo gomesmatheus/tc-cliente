@@ -3,16 +3,19 @@ name: Deploy to ECR
 on:
   push:
     branches: [ main ]
+  pull_request:
+      branches:
+        - main
 
 env:
   ECR_REPOSITORY: fiap/container
-  EKS_CLUSTER_NAME: tech-challenge-eks-kygY6dw5
+  EKS_CLUSTER_NAME: tc-cluster
   AWS_REGION: us-east-1
 
 jobs:
   
   build: 
-    name: Deployment on EKS 
+    name: Deployment on EKS
     runs-on: ubuntu-latest
 
     steps:
@@ -52,5 +55,10 @@ jobs:
         IMAGE_TAG: ${{ steps.commit.outputs.short }}
       run: |
         sed -i.bak "s|DOCKER_IMAGE|$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|g" k8s/cliente-app-dep.yaml && \
+        kubectl apply -f k8s/postgres-cliente.yaml --validate=false
+        kubectl apply -f k8s/postgres-service.yaml --validate=false
+        kubectl apply -f k8s/redis-dep.yaml --validate=false
+        kubectl apply -f k8s/redis-service.yaml --validate=false
         kubectl apply -f k8s/cliente-app-dep.yaml --validate=false
         kubectl apply -f k8s/svc-cliente-app.yaml --validate=false
+        

@@ -1,7 +1,7 @@
 coverage:
   precision: 2
   round: down
-  threshold: 80  # Enforces a coverage threshold of 80%
+  threshold: 80
 
 ignore:
   - cmd/myapp/main.go
