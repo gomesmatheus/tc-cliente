@@ -9,7 +9,7 @@ on:
 
 env:
   ECR_REPOSITORY: fiap/container
-  EKS_CLUSTER_NAME: tech-challenge-eks-kygY6dw5
+  EKS_CLUSTER_NAME: tc-cluster
   AWS_REGION: us-east-1
 
 jobs:
@@ -57,3 +57,4 @@ jobs:
         sed -i.bak "s|DOCKER_IMAGE|$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|g" k8s/cliente-app-dep.yaml && \
         kubectl apply -f k8s/cliente-app-dep.yaml --validate=false
         kubectl apply -f k8s/svc-cliente-app.yaml --validate=false
+        // add here other kubectl apply
